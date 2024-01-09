@@ -3,24 +3,23 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include <driver/spi_master.h>
+#include <driver/gpio.h>
 
 #define LOG_MAIN_TAG        ("main.c")
 
+/* LCD SPI Interface pins */
 #define SPIX_HOST           (SPI3_HOST)
 #define SPI3_CS0_PIN        (5)
 #define SPI3_SCLK_PIN       (18)
 #define SPI3_MISO_PIN       (19)
 #define SPI3_MOSI_PIN       (23)
 
-spi_device_handle_t spi;
+/* LCD GPIO Interface pins */
 
-void test_task(void *pvParameters){
-    while(1){
-        ESP_LOGI(LOG_MAIN_TAG, "Running task 1");
-        vTaskDelay( 1000 / portTICK_PERIOD_MS);
-    }
-}
 
+spi_device_handle_t spi;    /* SPI Structure handle. */
+
+/* Function that configure the SPI port. */
 static esp_err_t spi_configuration(void){
     esp_err_t ret = ESP_OK;
 
@@ -52,10 +51,9 @@ static esp_err_t spi_configuration(void){
     return ret;
 }
 
+/* Main function */
 void app_main(void)
 {
-    
-    xTaskCreate( test_task, "test task", 1024*2, NULL, 1, NULL );
 
     while(1){
         ESP_LOGI(LOG_MAIN_TAG, "Hello world!!!");
