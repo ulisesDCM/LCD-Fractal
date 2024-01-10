@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "esp_log.h"
 #include "esp_err.h"
 #include "freertos/FreeRTOS.h"
@@ -15,8 +18,8 @@
 #define SPI3_MISO_PIN       (19)
 #define SPI3_MOSI_PIN       (23)
 
-
 /* LCD GPIO Interface pins */
+
 spi_device_handle_t spi;    /* SPI Structure handle. */
 
 /* This function is called just before a transmission starts */
@@ -49,7 +52,6 @@ static esp_err_t spi_configuration(void){
     if(ret != ESP_OK){
         ESP_ERROR_CHECK(ret);
     }
-
     ESP_LOGI(LOG_MAIN_TAG, "Finish to configure SPI Bus!!!");
 
     /* Initialize SPI Bus. */
@@ -62,13 +64,23 @@ static esp_err_t spi_configuration(void){
     return ret;
 }
 
+static void spi_transmit(void){
+    esp_err_t err;
+    spi_transaction_t t;
+    memset( &t, 0, sizeof(t) );
+    t.length = 8;
+    t.tx_buffer = 0x04;
+    t.user = (void *) 0;
+    // spi_device_polling_transmit
+}
+
 /* Main function */
 void app_main(void)
 {
+    /* SPI configuration */
     spi_configuration();
 
     while(1){
-        ESP_LOGI(LOG_MAIN_TAG, "Hello world!!!");
         vTaskDelay( 1000 / portTICK_PERIOD_MS);
     }    
 }
